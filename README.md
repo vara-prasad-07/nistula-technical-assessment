@@ -243,34 +243,4 @@ Health check endpoint.
 }
 ```
 
-## Database Schema
 
-The PostgreSQL schema supports:
-- Guest profiles unified across channels
-- Conversations linked to guests and reservations
-- All inbound and outbound messages with AI metadata
-- Audit trail of agent edits
-- Confidence scores and query types per message
-
-See `schema.sql` for full schema design with detailed comments.
-
-## Configuration
-
-Environment variables in `.env`:
-
-```
-ANTHROPIC_API_KEY=sk-ant-...          # Claude API key
-```
-
-## Future Enhancements
-
-- Multi-language support for international guests
-- Integration with booking platforms (Booking.com, Airbnb APIs)
-- Agent dashboard for message review and analytics
-- Feedback loop to improve AI model accuracy
-- SMS and email channel support
-- Real-time agent notifications
-
-## License
-
-Proprietary - Nistula 2026
