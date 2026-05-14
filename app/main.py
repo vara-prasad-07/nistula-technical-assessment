@@ -54,6 +54,13 @@ async def receive_guest_message(payload: InboundMessage):
         DraftedReplyResponse: Drafted reply with confidence score
     """
     try:
+        # Validate message field is not empty
+        if not payload.message.strip():
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid request: message field is empty"
+            )
+        
         # Step 1: Normalize message to unified schema
         normalized_message = normalize_message(payload.dict())
         
