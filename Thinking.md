@@ -1,14 +1,22 @@
-**PART 3 - THINKING QUESTION** **Question A - The Immediate Response**What should the AI reply right now at 3 am? Write the actual message.**My Thinking:**
+# PART 3 - THINKING QUESTIONS
 
-Hi \[Guest Name\], I'm really sorry. No hot water at 3 am with guests arriving is completely unacceptable, and I understand your frustration.
+---
 
-I've immediately alerted our caretaker and property manager. Someone will contact you within the next 15 minutes with a resolution.
+## Question A - The Immediate Response
 
-We are taking your refund request seriously. It will be reviewed first thing, and you'll have a confirmed answer before 7 am.
+**What should the AI reply right now at 3 am? Write the actual message.**
 
-Please don't hesitate to message here if anything else comes up tonight.
+### My Thinking:
 
-**Question B - The System Design**What should the platform do beyond sending a message? Walk through the full system response: what gets triggered, who gets notified, what gets logged, What happens if no human responds within 30 minutes?**My Thinking:**
+> Hi [Guest Name], I'm really sorry. No hot water at 3 am with guests arriving is completely unacceptable, and I understand your frustration.
+>
+> I've immediately alerted our caretaker and property manager. Someone will contact you within the next 15 minutes with a resolution.
+>
+> We are taking your refund request seriously. It will be reviewed first thing, and you'll have a confirmed answer before 7 am.
+>
+> Please don't hesitate to message here if anything else comes up tonight.
+
+**Question B - The System Design** → **## Question B - The System Design** the platform do beyond sending a message? Walk through the full system response: what gets triggered, who gets notified, what gets logged, What happens if no human responds within 30 minutes?**My Thinking:**
 
 Sending the message is the smallest part. Here's what the platform triggers simultaneously:**Immediate (0–2 mins):**
 
