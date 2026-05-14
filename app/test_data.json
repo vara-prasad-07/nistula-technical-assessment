@@ -1,0 +1,34 @@
+[
+  {
+    "source": "whatsapp",
+    "guest_name": "Rahul Sharma",
+    "message": "Hi, what would be the total cost for 2 adults staying for 3 nights next weekend?",
+    "timestamp": "2026-05-05T10:30:00Z",
+    "booking_ref": "NIS-2024-0891",
+    "property_id": "villa-b1"
+  },
+  {
+    "source": "whatsapp",
+    "guest_name": "Rahul Sharma",
+    "message": "Can I reserve Villa B1 from April 20th to April 24th?",
+    "timestamp": "2026-05-05T10:30:00Z",
+    "booking_ref": "NIS-2024-0891",
+    "property_id": "villa-b1"
+  },
+  {
+    "source": "whatsapp",
+    "guest_name": "Rahul Sharma",
+    "message": "What’s the nightly rate for 4 guests, and can we also arrange airport pickup?",
+    "timestamp": "2026-05-05T10:30:00Z",
+    "booking_ref": "NIS-2024-0891",
+    "property_id": "villa-b1"
+  },
+  {
+    "source": "whatsapp",
+    "guest_name": "Rahul Sharma",
+    "message": "The AC stopped working last night and nobody is responding.",
+    "timestamp": "2026-05-05T10:30:00Z",
+    "booking_ref": "NIS-2024-0891",
+    "property_id": "villa-b1"
+  }
+]

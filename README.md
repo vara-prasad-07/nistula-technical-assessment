@@ -2,17 +2,9 @@
 
 ## Overview
 
-Nistula is an intelligent guest messaging platform built for property managers. It receives messages from multiple channels—WhatsApp, Booking.com, Airbnb, Instagram, and direct inquiries—and automatically generates professional replies using AI. Every message is analyzed to determine whether it can be safely sent automatically, needs agent review, or requires human escalation.
+Nistula is an intelligent guest messaging platform built for property managers. It receives messages from multiple channels - WhatsApp, Booking.com, Airbnb, Instagram, and direct inquiries and automatically generates professional replies using AI. Every message is analyzed to determine whether it can be safely sent automatically, needs agent review, or requires human escalation.
 
-The core innovation is a confidence scoring system that evaluates both the quality of the guest's question and the sentiment behind it. A clear availability question from a satisfied guest scores high and is auto-sent. A vague complaint scores low and gets routed to a human agent. This hybrid approach—AI speed with human oversight—delivers fast response times while maintaining service quality.
-
-## Architecture
-
-The system is built with:
-- **FastAPI** - High-performance Python web framework for the webhook endpoints
-- **Claude** - AI models for generating professional responses
-- **PostgreSQL** - Database schema for guest profiles, conversations, and audit trails
-- **Python** - Async processing for real-time message handling
+The core part is a confidence scoring system that evaluates both the quality of the guest's question and the sentiment behind it. A clear availability question from a satisfied guest scores high and is auto-sent. A vague complaint scores low and gets routed to a human agent. This hybrid approach - AI speed with human oversight - delivers fast response times while maintaining service quality.
 
 ## Setup Instructions
 
@@ -26,7 +18,7 @@ The system is built with:
 1. Clone the repository:
 ```bash
 git clone https://github.com/vara-prasad-07/nistula-technical-assessment.git
-cd nistula/app
+cd app
 ```
 
 2. Create a virtual environment:
@@ -99,9 +91,70 @@ You should receive a response like:
 }
 ```
 
-### Option 2: cURL / Postman Testing
+### Option 2: Automated Testing with Python Script
 
-Coming soon.
+The `test_runner.py` script loads multiple test messages from `test_data.json` and sends them to the webhook endpoint automatically. This is ideal for batch testing and seeing how the system handles different message types.
+
+**Prerequisites:**
+- FastAPI server must be running (see Setup section above)
+- `requests` library (included in requirements.txt)
+
+**Running the tests:**
+
+1. Open a new terminal window (keep the FastAPI server running in another window)
+
+2. Navigate to the app directory:
+```bash
+cd app
+```
+
+3. Run the test script:
+```bash
+python test_runner.py
+```
+
+**What happens:**
+- The script connects to `http://127.0.0.1:8000`
+- It loads all test messages from `test_data.json`
+- For each message, it sends a POST request and displays the response
+- Results are color-coded:
+  - Green = Auto Send (high confidence)
+  - Yellow = Agent Review (medium confidence)
+  - Red = Escalate (low confidence)
+- A summary is printed showing the breakdown of actions and average confidence score
+
+**Sample output:**
+```
+Test 1/4
+INPUT MESSAGE:
+  Channel:    whatsapp
+  Guest:      Rahul Sharma
+  Message:    Hi, what would be the total cost for 2 adults staying for 3 nights?
+  Booking:    NIS-2024-0891
+
+AI RESPONSE:
+  Message ID:        550e8400...
+  Query Type:        pre_sales_pricing
+  Drafted Reply:     For 2 adults, 3 nights at ₹18,000/night = ₹54,000 total.
+  Confidence Score:  0.91 (HIGH)
+  Action:            AUTO_SEND
+
+================================================================================
+SUMMARY
+================================================================================
+Total Tests:        4
+Auto Send:          3
+Agent Review:       1
+Escalate:           0
+Errors:             0
+Average Confidence: 0.82
+```
+
+This option is perfect for:
+- Testing multiple scenarios at once
+- Validating the system's behavior across different message types
+- Automated CI/CD pipelines
+- Performance monitoring
 
 ## Understanding Confidence Scores
 
