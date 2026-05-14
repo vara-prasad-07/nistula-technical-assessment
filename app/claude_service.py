@@ -3,16 +3,19 @@ import os
 from dotenv import load_dotenv
 from utilities.property_utils import get_property_details
 from confidence_score import calculate_confidence_score, determine_action
-
+from groq import Groq
 load_dotenv()
 
-client = AsyncAnthropic(
+calude_client = AsyncAnthropic(
     api_key=os.getenv("ANTHROPIC_API_KEY", "").strip()
 )
-
+groq_client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
+)
 class ClaudeService:
     def __init__(self):
-        self.client = client
+        self.calude_client = calude_client
+        self.groq_client=groq_client
     
     # ==================== AI REPLY GENERATION ====================
     async def generate_reply(self, normalized_message: dict) -> dict:
@@ -39,36 +42,24 @@ class ClaudeService:
         # Build system context with property details
         system_context = f"""You are a helpful property manager assistant for Nistula Villa B1.
         
-Property Details:
-- {property_info['property']}
-- Bedrooms: {property_info['bedrooms']}, Max Guests: {property_info['max_guests']}
-- Check-in: {property_info['check_in']}, Check-out: {property_info['check_out']}
-- Base Rate: ₹{property_info['base_rate']['amount']}/night (up to 4 guests)
-- Extra Guest: ₹{property_info['extra_guest']['amount']}/night
-- WiFi: {property_info['wifi_password']}
-- Caretaker: Available {property_info['caretaker']['hours']}
-- Chef on Call: {property_info['chef_on_call']['available']} (pre-booking required)
-- Cancellation: {property_info['cancellation']}
+        Property Details:
+        - {property_info['property']}
+        - Bedrooms: {property_info['bedrooms']}, Max Guests: {property_info['max_guests']}
+        - Check-in: {property_info['check_in']}, Check-out: {property_info['check_out']}
+        - Base Rate: ₹{property_info['base_rate']['amount']}/night (up to 4 guests)
+        - Extra Guest: ₹{property_info['extra_guest']['amount']}/night
+        - WiFi: {property_info['wifi_password']}
+        - Caretaker: Available {property_info['caretaker']['hours']}
+        - Chef on Call: {property_info['chef_on_call']['available']} (pre-booking required)
+        - Cancellation: {property_info['cancellation']}
 
-Query Type: {query_type}
-Guest Name: {guest_name}
+        Query Type: {query_type}
+        Guest Name: {guest_name}
 
-Draft a professional, warm, and helpful reply. Keep it concise (2-3 sentences max). Be specific using the property details above."""
+        Draft a professional, warm, and helpful reply. Keep it concise (2-3 sentences max). Be specific using the property details above."""
 
-        # Call Claude API
-        response = await self.client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=200,
-            system=system_context,
-            messages=[
-                {
-                    "role": "user",
-                    "content": message_text
-                }
-            ]
-        )
-        
-        drafted_reply = response.content[0].text
+        # Call LLM service to generate draft reply
+        drafted_reply = self.groq_llm(system_context, message_text)
         
         # Calculate confidence score using all 5 factors
         confidence_score = calculate_confidence_score(
@@ -88,3 +79,37 @@ Draft a professional, warm, and helpful reply. Keep it concise (2-3 sentences ma
             "action": action
         }
     
+    async def claude_llm(self,system_context,message_text):
+        response = await self.calude_client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=200,
+            system=system_context,
+            messages=[
+                {
+                    "role": "user",
+                    "content": message_text
+                }
+            ]
+        )
+        return response.content[0].text
+    
+    def groq_llm(self, system_context, message_text):
+        """
+        Call Groq LLM (synchronous - Groq SDK is sync-only)
+        """
+        response = self.groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_context
+                },
+                {
+                    "role": "user",
+                    "content": message_text
+                }
+            ],
+            temperature=0.7,
+            max_tokens=200
+        )
+        return response.choices[0].message.content
