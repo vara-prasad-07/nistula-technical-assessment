@@ -1,12 +1,12 @@
-# PART 3 - THINKING QUESTIONS
+# Part 3 — Thinking Questions
 
 ---
 
-## Question A - The Immediate Response
+## Question A — The Immediate Response
 
 **What should the AI reply right now at 3 am? Write the actual message.**
 
-### My Thinking:
+### Answer
 
 > Hi [Guest Name], I'm really sorry. No hot water at 3 am with guests arriving is completely unacceptable, and I understand your frustration.
 >
@@ -16,35 +16,92 @@
 >
 > Please don't hesitate to message here if anything else comes up tonight.
 
-**Question B - The System Design** → **## Question B - The System Design** the platform do beyond sending a message? Walk through the full system response: what gets triggered, who gets notified, what gets logged, What happens if no human responds within 30 minutes?**My Thinking:**
+---
 
-Sending the message is the smallest part. Here's what the platform triggers simultaneously:**Immediate (0–2 mins):**
+## Question B — The System Design
 
-*   Confidence score flags this as a complaint to escalate. An AI reply is sent, but no auto-resolution is attempted.
-    
-*   Push notification + SMS send to the caretaker (on-call 8 am–10 pm, so an override alert) and the property manager.
-    
-*   Incident ticket created in the internal dashboard: **guest name**, **property**, **issue type = maintenance/hot\_water**, **severity = high (guest count + breakfast deadline detected from message context)**.
-    
-*   The conversation is locked - no further AI auto-replies until a human takes ownership of the thread.
-    
+**What should the platform do beyond sending a message? Walk through the full system response: what gets triggered, who gets notified, what gets logged, and what happens if no human responds within 30 minutes?**
 
-**Logged to the incident record:**Timestamp, raw message, confidence score, query classification, which humans were notified and when, and the AI-drafted reply that was sent.
+### Answer
 
-**If no human responds within 30 minutes:**Escalation tier 2 fires - the owner or senior manager gets called, not just messaged. The system also sends the guest a proactive update: _"We're still working to reach someone -here's the emergency contact number."_ The guest should never sit in silence. After 60 minutes with no human response, the system auto-approves a partial refund for that night as a goodwill gesture, logs it, and notifies the owner.
+Sending the message is the smallest part. Here's what the platform triggers simultaneously.
 
-**Question C - The Learning**
+#### Immediate Actions (0–2 mins)
 
-This is the third time in two months a guest has complained about hot water at Villa B1. What should the system do with this pattern? What would you build to prevent this complaint from happening a fourth time?**My Thinking:**
+- Confidence score flags this as a complaint to escalate. An AI reply is sent, but no auto-resolution is attempted.
+- Push notification + SMS sent to the caretaker (on-call override alert) and the property manager.
+- Incident ticket created in the internal dashboard with the following fields:
+  - **Guest Name**
+  - **Property**
+  - **Issue Type:** `maintenance/hot_water`
+  - **Severity:** `High` *(guest count + breakfast deadline detected from message context)*
+- The conversation is **locked** — no further AI auto-replies until a human takes ownership of the thread.
 
-Three hot water complaints in two months is not a guest problem - it's a property problem. The system is failing to surface.
+#### Logged to the Incident Record
 
-**What the system should do immediately:**Flag Villa B1 as a "repeat issue property" for hot water. Auto-generate a maintenance report and send it to the owner with all three incident timestamps, guest messages, and any refunds paid out. Make the cost of inaction visible - if each complaint costs ₹5,000 in refunds and goodwill, the report says ₹15,000 is lost to one unresolved issue.**What I'd build to prevent a fourth complaint:**
+- Timestamp
+- Raw guest message
+- Confidence score
+- Query classification
+- Which humans were notified and when
+- The AI-drafted reply that was sent
 
-First, a **pre-stay checklist triggers -** 24 hours before every check-in at Villa B1, the caretaker gets an automated task: "Run hot water in all bathrooms. Confirm working." This takes two minutes and catches the problem before the guest does.
+#### If No Human Responds Within 30 Minutes
 
-Second, a **pattern intelligence layer** - the system should tag complaints by issue type, not just query type. When the same tag appears 3+ times on one property within 60 days, it auto-raises a maintenance\_alert to the owner with a suggested action, not just a notification. The difference matters: a notification gets dismissed; a suggested action ("Schedule boiler inspection - 3 incidents logged") creates accountability.
+**Escalation Tier 2 fires:**
 
-Third, a **post-resolution check** - after any maintenance complaint is closed, the system schedules a follow-up message to the next guest after check-in: _"How's everything with the property so far?"_ This creates an early warning system before a complaint escalates.
+- The owner or senior manager gets **called**, not just messaged.
+- The guest receives a proactive update:
+  > *"We're still working to reach someone — here's the emergency contact number."*
+- The guest should never sit in silence.
 
-The goal is to shift the platform from **responding to complaints** to **preventing them**.
+**After 60 minutes with no human response:**
+
+- The system auto-approves a **partial refund** for that night as a goodwill gesture.
+- The refund is logged and the owner is notified.
+
+---
+
+## Question C — The Learning
+
+**This is the third time in two months a guest has complained about hot water at Villa B1. What should the system do with this pattern? What would you build to prevent this complaint from happening a fourth time?**
+
+### Answer
+
+Three hot water complaints in two months is not a guest problem — it's a property problem the system is failing to surface.
+
+#### What the System Should Do Immediately
+
+Flag Villa B1 as a **"repeat issue property"** for hot water. Auto-generate a maintenance report and send it to the owner containing:
+
+- All three incident timestamps
+- The original guest messages
+- Any refunds paid out
+
+Make the **cost of inaction visible** — if each complaint costs ₹5,000 in refunds and goodwill, the report clearly states: *"₹15,000 lost to one unresolved issue."*
+
+#### What I'd Build to Prevent a Fourth Complaint
+
+**1. Pre-Stay Checklist**
+
+24 hours before every check-in at Villa B1, the caretaker receives an automated task:
+
+> *"Run hot water in all bathrooms. Confirm working."*
+
+This takes two minutes and catches the problem before the guest does.
+
+**2. Pattern Intelligence Layer**
+
+The system should tag complaints by **issue type**, not just query type. When the same tag appears 3+ times on one property within 60 days, it auto-raises a `maintenance_alert` to the owner with a **suggested action**, not just a notification.
+
+The difference matters: a notification gets dismissed; a suggested action creates accountability.
+
+> *Example: "Schedule boiler inspection — 3 incidents logged"*
+
+**3. Post-Resolution Follow-Up**
+
+After any maintenance complaint is closed, the system schedules a follow-up message to the **next guest after check-in**:
+
+> *"How's everything with the property so far?"*
+
+This creates an early warning system before a complaint escalates.
