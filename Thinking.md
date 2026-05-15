@@ -1,8 +1,8 @@
-# Part 3 — Thinking Questions
+# Part 3 - Thinking Questions
 
 ---
 
-## Question A — The Immediate Response
+## Question A - The Immediate Response
 
 **What should the AI reply right now at 3 am? Write the actual message.**
 
@@ -18,7 +18,7 @@
 
 ---
 
-## Question B — The System Design
+## Question B - The System Design
 
 **What should the platform do beyond sending a message? Walk through the full system response: what gets triggered, who gets notified, what gets logged, and what happens if no human responds within 30 minutes?**
 
@@ -35,7 +35,7 @@ Sending the message is the smallest part. Here's what the platform triggers simu
   - **Property**
   - **Issue Type:** `maintenance/hot_water`
   - **Severity:** `High` *(guest count + breakfast deadline detected from message context)*
-- The conversation is **locked** — no further AI auto-replies until a human takes ownership of the thread.
+- The conversation is **locked** - no further AI auto-replies until a human takes ownership of the thread.
 
 #### Logged to the Incident Record
 
@@ -52,7 +52,7 @@ Sending the message is the smallest part. Here's what the platform triggers simu
 
 - The owner or senior manager gets **called**, not just messaged.
 - The guest receives a proactive update:
-  > *"We're still working to reach someone — here's the emergency contact number."*
+  > *"We're still working to reach someone - here's the emergency contact number."*
 - The guest should never sit in silence.
 
 **After 60 minutes with no human response:**
@@ -62,13 +62,13 @@ Sending the message is the smallest part. Here's what the platform triggers simu
 
 ---
 
-## Question C — The Learning
+## Question C - The Learning
 
 **This is the third time in two months a guest has complained about hot water at Villa B1. What should the system do with this pattern? What would you build to prevent this complaint from happening a fourth time?**
 
 ### Answer
 
-Three hot water complaints in two months is not a guest problem — it's a property problem the system is failing to surface.
+Three hot water complaints in two months is not a guest problem - it's a property problem the system is failing to surface.
 
 #### What the System Should Do Immediately
 
@@ -78,7 +78,7 @@ Flag Villa B1 as a **"repeat issue property"** for hot water. Auto-generate a ma
 - The original guest messages
 - Any refunds paid out
 
-Make the **cost of inaction visible** — if each complaint costs ₹5,000 in refunds and goodwill, the report clearly states: *"₹15,000 lost to one unresolved issue."*
+Make the **cost of inaction visible** - if each complaint costs ₹5,000 in refunds and goodwill, the report clearly states: *"₹15,000 lost to one unresolved issue."*
 
 #### What I'd Build to Prevent a Fourth Complaint
 
@@ -96,7 +96,7 @@ The system should tag complaints by **issue type**, not just query type. When th
 
 The difference matters: a notification gets dismissed; a suggested action creates accountability.
 
-> *Example: "Schedule boiler inspection — 3 incidents logged"*
+> *Example: "Schedule boiler inspection - 3 incidents logged"*
 
 **3. Post-Resolution Follow-Up**
 
