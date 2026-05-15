@@ -6,6 +6,39 @@ Nistula is an intelligent guest messaging platform built for property managers. 
 
 The core part is a confidence scoring system that evaluates both the quality of the guest's question and the sentiment behind it. A clear availability question from a satisfied guest scores high and is auto-sent. A vague complaint scores low and gets routed to a human agent. This hybrid approach - AI speed with human oversight - delivers fast response times while maintaining service quality.
 
+## Architecture Overview
+
+```
+Incoming Message
+    ↓
+FastAPI Webhook Endpoint
+    ↓
+Payload Validation (Pydantic)
+    ↓
+Normalization Layer
+    ↓
+Deterministic Query Classification
+    ↓
+AI Draft Reply Generation
+    ↓
+Confidence Scoring
+    ↓
+Operational Action Routing
+    ↓
+Structured JSON Response
+```
+
+### Key Components
+
+1. **FastAPI Webhook Endpoint** - Receives incoming messages from various channels
+2. **Payload Validation** - Uses Pydantic for data validation and serialization
+3. **Normalization Layer** - Standardizes message format across different channels
+4. **Query Classification** - Deterministically classifies message intent
+5. **AI Draft Generation** - Uses Claude API to generate professional replies
+6. **Confidence Scoring** - Evaluates message quality and sentiment
+7. **Action Routing** - Routes messages for auto-send, review, or escalation
+8. **Structured Response** - Returns JSON response with reply and metadata
+
 ## Setup Instructions
 
 ### Installation
@@ -17,9 +50,17 @@ cd app
 ```
 
 2. Create a virtual environment:
-```bash
+
+**Windows (PowerShell):**
+```powershell
 python -m venv venv
 venv\Scripts\activate
+```
+
+**macOS/Linux (Bash/Zsh):**
+```bash
+python -m venv venv
+source venv/bin/activate
 ```
 
 3. Install dependencies:
