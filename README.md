@@ -8,11 +8,6 @@ The core part is a confidence scoring system that evaluates both the quality of 
 
 ## Setup Instructions
 
-### Prerequisites
-- Python 3.9 or higher
-- PostgreSQL 12+ (optional, for database integration)
-- API keys from Anthropic (Claude)
-
 ### Installation
 
 1. Clone the repository:
