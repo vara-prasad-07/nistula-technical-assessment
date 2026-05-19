@@ -3,16 +3,20 @@ import os
 from dotenv import load_dotenv
 from utilities.property_utils import get_property_details
 from confidence_score import calculate_confidence_score, determine_action
-
+from groq import Groq
 load_dotenv()
 
 calude_client = AsyncAnthropic(
     api_key=os.getenv("ANTHROPIC_API_KEY", "").strip()
 )
+groq_client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
 class ClaudeService:
     def __init__(self):
         self.calude_client = calude_client
+        self.groq_client = groq_client
     
     # ==================== AI REPLY GENERATION ====================
     async def generate_reply(self, normalized_message: dict) -> dict:
@@ -38,6 +42,11 @@ class ClaudeService:
         
         # Build system context with property details
         system_context = f"""You are a helpful property manager assistant for Nistula Villa B1.
+
+        **IMPORTANT: You ONLY answer questions related to hospitality, villa amenities, bookings, and guest services.**
+        
+        For any query that is NOT related to hospitality (such as general knowledge, tech support, politics, etc.):
+        Respond with: "Sorry, this query is irrelevant. I can only assist with hospitality-related questions about your villa stay, bookings, amenities, or check-in/check-out details."
         
         Property Details:
         - {property_info['property']}
@@ -56,7 +65,7 @@ class ClaudeService:
         Draft a professional, warm, and helpful reply. Keep it concise (2-3 sentences max). Be specific using the property details above."""
 
         # Call LLM service to generate draft reply
-        drafted_reply =  await self.claude_llm(system_context, message_text)
+        drafted_reply = self.groq_llm(system_context, message_text)
         
         # Calculate confidence score using all 5 factors
         confidence_score = calculate_confidence_score(
@@ -89,4 +98,23 @@ class ClaudeService:
             ]
         )
         return response.content[0].text
-    
+    def groq_llm(self, system_context, message_text):
+        """
+        Call Groq LLM (synchronous - Groq SDK is sync-only)
+        """
+        response = self.groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_context
+                },
+                {
+                    "role": "user",
+                    "content": message_text
+                }
+            ],
+            temperature=0.7,
+            max_tokens=200
+        )
+        return response.choices[0].message.content

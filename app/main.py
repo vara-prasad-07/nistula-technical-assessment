@@ -1,8 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from claude_service import ClaudeService
 from utilities.message_utils import normalize_message, classify_query
+import os
 
 app = FastAPI()
 
@@ -88,3 +90,24 @@ async def receive_guest_message(payload: InboundMessage):
 async def health_check():
     """Health check endpoint"""
     return {"status": "ok"}
+
+# ==================== SERVE STATIC FILES & INDEX ====================
+@app.get("/{full_path:path}")
+async def serve_frontend(full_path: str):
+    """
+    Serve frontend files from public folder.
+    This is a catch-all route that serves the index.html for root and any other HTML requests.
+    """
+    public_dir = os.path.join(os.path.dirname(__file__), "public")
+    file_path = os.path.join(public_dir, full_path)
+    
+    # If file exists, serve it
+    if os.path.isfile(file_path):
+        return FileResponse(file_path)
+    
+    # Otherwise serve index.html (for SPA routing)
+    index_path = os.path.join(public_dir, "index.html")
+    if os.path.isfile(index_path):
+        return FileResponse(index_path)
+    
+    return {"error": "File not found"}, 404
